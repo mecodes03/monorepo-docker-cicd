@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Clone Code On Machine
         uses: actions/checkout@v4
 
       - name: Docker Login
@@ -26,7 +26,7 @@ jobs:
           push: true
           tags: mecodes/notes-backend:${{ github.sha }}
 
-      - name: Execute remote SSH commands using password
+      - name: SSH into VM and rerun the docker container
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.HOST }}
@@ -35,5 +35,5 @@ jobs:
           script: |
             docker kill notes-backend # stop container
             docker rm notes-backend # remove container
-            docker rmi $(docker images | grep 'notes-backend') # remove images
-            docker run --name notes-backend -e DATABASE_URL="${{ secrets.DATABASE_URL }}" -p 4000:4000 -d mecodes/notes-backend:${{ github.sha }}
+            docker rmi $(docker images | grep 'notes-backend') # remove images, don't wanna full the space
+            docker run --name notes-backend -e DATABASE_URL="${{ secrets.DATABASE_URL }}" -p 4000:4000 -d mecodes/notes-backend:${{ github.sha }} # running in detached mode so action stops after starting the container
