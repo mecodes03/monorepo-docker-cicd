@@ -24,4 +24,17 @@ jobs:
           context: .
           file: ./docker/http.Dockerfile
           push: true
-          tags: mecodes/notes-http:latest
+          tags: mecodes/notes-http:${{ github.sha }}
+
+      - name: Execute remote SSH commands using password
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            docker kill notes-backend -f # stop container
+            docker rm notes-backend -f # remove container
+            docker rmi $(docker images | grep 'notes-backend') # remove images
+            docker run --name notes-backend -e DATABASE_URL=${{ secrets.DATABASE_URL }} -p 8080:8080 mecodes/notes-backend:${{ github.sha }}
