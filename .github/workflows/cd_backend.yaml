@@ -36,4 +36,4 @@ jobs:
             docker kill notes-backend # stop container
             docker rm notes-backend # remove container
             docker rmi $(docker images | grep 'notes-backend') # remove images
-            docker run --name notes-backend -e DATABASE_URL="${{ secrets.DATABASE_URL }}" -p 8080:8080 mecodes/notes-backend:${{ github.sha }}
+            docker run --name notes-backend -e DATABASE_URL="${{ secrets.DATABASE_URL }}" -p 8080:8080 -d mecodes/notes-backend:${{ github.sha }}
