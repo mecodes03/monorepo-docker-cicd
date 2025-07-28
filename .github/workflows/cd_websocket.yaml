@@ -1,4 +1,4 @@
-name: Deploy Backend
+name: Deploy WebSocket Servef
 
 on:
   push:
@@ -22,9 +22,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./docker/http.Dockerfile
+          file: ./docker/ws.Dockerfile
           push: true
-          tags: mecodes/notes-http:${{ github.sha }}
+          tags: mecodes/notes-websocket:${{ github.sha }}
 
       - name: Execute remote SSH commands using password
         uses: appleboy/ssh-action@v1
@@ -32,8 +32,9 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
           script: |
-            docker kill notes-backend # stop container
-            docker rm notes-backend # remove container
-            docker rmi $(docker images | grep 'notes-backend') # remove images
-            docker run --name notes-backend -e DATABASE_URL=${{ secrets.DATABASE_URL }} -p 8080:8080 mecodes/notes-backend:${{ github.sha }}
+            docker kill notes-websocket -f # stop container
+            docker rm notes-websocket -f # remove container
+            docker rmi $(docker images | grep 'notes-websocket') # remove images
+            docker run --name notes-websocket -e DATABASE_URL=${{ secrets.DATABASE_URL }} -p 8080:8080 mecodes/notes-websocket:${{ github.sha }}

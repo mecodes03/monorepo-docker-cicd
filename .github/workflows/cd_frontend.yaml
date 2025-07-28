@@ -1,4 +1,4 @@
-name: Deploy Backend
+name: Deploy Frontend
 
 on:
   push:
@@ -22,18 +22,21 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./docker/http.Dockerfile
+          file: ./docker/web.Dockerfile
           push: true
-          tags: mecodes/notes-http:${{ github.sha }}
+          tags: mecodes/notes-frontend:${{ github.sha }}
+          build-args: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
 
-      - name: Execute remote SSH commands using password
+      - name: SSH into EC2 and restart Docker Container
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
           script: |
-            docker kill notes-backend # stop container
-            docker rm notes-backend # remove container
-            docker rmi $(docker images | grep 'notes-backend') # remove images
-            docker run --name notes-backend -e DATABASE_URL=${{ secrets.DATABASE_URL }} -p 8080:8080 mecodes/notes-backend:${{ github.sha }}
+            docker kill notes-frontend -f # stop container
+            docker rm notes-frontend -f # remove container
+            docker rmi $(docker images | grep 'notes-frontend') # remove image
+            docker run --name notes-frontend -e DATABASE_URL=${{ secrets.DATABASE_URL }} -p 3000:3000 mecodes/notes-frontend:${{ github.sha }}
