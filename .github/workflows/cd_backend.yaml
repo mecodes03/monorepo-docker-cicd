@@ -22,9 +22,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./docker/http.Dockerfile
+          file: ./docker/backend.Dockerfile
           push: true
-          tags: mecodes/notes-http:${{ github.sha }}
+          tags: mecodes/notes-backend:${{ github.sha }}
 
       - name: Execute remote SSH commands using password
         uses: appleboy/ssh-action@v1

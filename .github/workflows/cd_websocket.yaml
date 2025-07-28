@@ -22,7 +22,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./docker/ws.Dockerfile
+          file: ./docker/websocket.Dockerfile
           push: true
           tags: mecodes/notes-websocket:${{ github.sha }}
 

@@ -1,8 +1,8 @@
 services:
-  http:
+  backend:
     build:
       context: ./
-      dockerfile: ./docker/http.Dockerfile
+      dockerfile: ./docker/backend.Dockerfile
     ports:
       - 4000:4000
     environment:
@@ -10,10 +10,10 @@ services:
     # depends-on:
     #   - pg-db
 
-  ws:
+  websocket:
     build:
       context: ./
-      dockerfile: ./docker/ws.Dockerfile
+      dockerfile: ./docker/websocket.Dockerfile
     ports:
       - 8080:8080
     environment:
@@ -21,10 +21,10 @@ services:
     # depends-on:
     #   - pg-db
 
-  web:
+  frontend:
     build:
       context: ./
-      dockerfile: ./docker/web.Dockerfile
+      dockerfile: ./docker/frontend.Dockerfile
       args:
         DATABASE_URL: $DATABASE_URL
     ports:
