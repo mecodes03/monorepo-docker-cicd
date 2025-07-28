@@ -1,0 +1,42 @@
+services:
+  http:
+    build:
+      context: ./
+      dockerfile: ./docker/http.Dockerfile
+    ports:
+      - 4000:4000
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@pg-db:5432/postgres
+    # depends-on:
+    #   - pg-db
+
+  ws:
+    build:
+      context: ./
+      dockerfile: ./docker/ws.Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@pg-db:5432/postgres
+    # depends-on:
+    #   - pg-db
+
+  web:
+    build:
+      context: ./
+      dockerfile: ./docker/web.Dockerfile
+      args:
+        DATABASE_URL: $DATABASE_URL
+    ports:
+      - 3000:3000
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@pg-db:5432/postgres
+    # depends-on:
+    #   - pg-db
+
+  pg-db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
