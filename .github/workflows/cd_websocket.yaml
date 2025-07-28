@@ -1,4 +1,4 @@
-name: Deploy WebSocket Servef
+name: Deploy WebSocket Server
 
 on:
   push:
@@ -37,4 +37,4 @@ jobs:
             docker kill notes-websocket -f # stop container
             docker rm notes-websocket -f # remove container
             docker rmi $(docker images | grep 'notes-websocket') # remove images
-            docker run --name notes-websocket -e DATABASE_URL=${{ secrets.DATABASE_URL }} -p 8080:8080 mecodes/notes-websocket:${{ github.sha }}
+            docker run --name notes-websocket -e DATABASE_URL="${{ secrets.DATABASE_URL }}" -p 8080:8080 mecodes/notes-websocket:${{ github.sha }}

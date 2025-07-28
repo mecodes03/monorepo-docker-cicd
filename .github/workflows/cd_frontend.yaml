@@ -39,4 +39,4 @@ jobs:
             docker kill notes-frontend -f # stop container
             docker rm notes-frontend -f # remove container
             docker rmi $(docker images | grep 'notes-frontend') # remove image
-            docker run --name notes-frontend -e DATABASE_URL=${{ secrets.DATABASE_URL }} -p 3000:3000 mecodes/notes-frontend:${{ github.sha }}
+            docker run --name notes-frontend -e DATABASE_URL="${{ secrets.DATABASE_URL }}" -p 3000:3000 mecodes/notes-frontend:${{ github.sha }}
