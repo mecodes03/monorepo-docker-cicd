@@ -4,6 +4,7 @@ import { client } from "@repo/prisma/client"; // adjust path as needed
 const router: Router = Router();
 
 router.post("/", async (req, res) => {
+  console.log("wanna create user?");
   try {
     const user = await client.user.create({ data: req.body });
     res.status(201).json(user);
